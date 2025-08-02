@@ -1,15 +1,29 @@
 plugins {
   id "com.github.node-gradle.node" version "3.5.1"
 }
+
 node {
   download = true
   version = "9.11.1"
   npmVersion = "5.6.0"
 }
-// Declare a build task
-task build
-// Declare a task to create a zip of the app
-task zip(type: Zip) {
+
+// Declare tasks
+tasks.register("npmInstall", NpmTask) {
+  args = ["install"]
+}
+
+tasks.register("npm_test", NpmTask) {
+  args = ["test"]
+  dependsOn("npmInstall")
+}
+
+tasks.register("npm_build", NpmTask) {
+  args = ["run", "build"]
+  dependsOn("npm_test", "npmInstall")
+}
+
+tasks.register("zip", Zip) {
   from('.') {
     include "*"
     include "bin/**"
@@ -19,15 +33,11 @@ task zip(type: Zip) {
     include "routes/**"
     include "views/**"
   }
-  destinationDirectory.set(file("dist"))  // 
-  archiveBaseName.set("trainSchedule")    // 
-// Declare task dependencies
-build.dependsOn zip
-zip.dependsOn npm_build
-npm_build.dependsOn npm_test
-npm_test.dependsOn npmInstall
-npm_build.dependsOn npmInstall
+  destinationDirectory.set(file("dist"))
+  archiveBaseName.set("trainSchedule")
+  dependsOn("npm_build")
+}
 
-./gradlew npm_start
-./gradlew npm install
-
+tasks.register("build") {
+  dependsOn("zip")
+}
