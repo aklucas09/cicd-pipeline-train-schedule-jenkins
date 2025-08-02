@@ -8,17 +8,14 @@ node {
   npmVersion = "5.6.0"
 }
 
-// Declare tasks
-tasks.register("npmInstall", NpmTask) {
-  args = ["install"]
-}
+// Use existing npmInstall task provided by the plugin
 
-tasks.register("npm_test", NpmTask) {
+tasks.register("npm_test", com.github.gradle.node.npm.task.NpmTask) {
   args = ["test"]
   dependsOn("npmInstall")
 }
 
-tasks.register("npm_build", NpmTask) {
+tasks.register("npm_build", com.github.gradle.node.npm.task.NpmTask) {
   args = ["run", "build"]
   dependsOn("npm_test", "npmInstall")
 }
