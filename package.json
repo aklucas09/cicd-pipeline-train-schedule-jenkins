@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "test": "./node_modules/.bin/mocha"
-  },
+  "start": "./node ./bin/www",
+  "test": "./node_modules/.bin/mocha",
+  "build": "echo 'No build step needed — passing build phase.'"
+},
   "dependencies": {
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
